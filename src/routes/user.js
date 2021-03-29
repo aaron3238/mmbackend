@@ -45,6 +45,7 @@ router.route('/').post((req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    console.log("email: " + req.body.email + " Password: " + req.body.password)
 
     const newUser = new user({
         name,
@@ -53,7 +54,7 @@ router.route('/').post((req, res) => {
     })
 
     newUser.save()
-    .then(newUser => res.json(newUser))
+    .then(newUser => res.json(newUser._id))
     .catch(err => res.status(400).json("You messed up! " + err));
 })
 
