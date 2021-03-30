@@ -9,7 +9,7 @@ const dbUrl = "mongodb://root:example@mongo:27017"
 let notif = require('./notifications/notification.js');
 
 var connectWithRetry = function() {
-    return mongoose.connect(dbUrl, {dbName: "tutorial"}, function(err) {
+    return mongoose.connect(dbUrl, {dbName: "mmbackend"}, function(err) {
         if (err) {
           console.error('Failed to connect to mongo on startup - retrying in 1 sec', err);
           setTimeout(connectWithRetry, 5000);
