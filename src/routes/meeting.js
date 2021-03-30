@@ -48,7 +48,7 @@ router.route('/:id').post((req, res) => {
 router.route('/:id').delete((req, res) => {
     meeting.findByIdAndDelete(req.params.id)
     .then(deletedMeeting => res.json("deleted!"))
-    .catch(err => res.status(400).json("Error deleting meeting: " + deletedMeeting.meetingName + err))
+    .catch(err => res.status(400).json("Error deleting meeting: " + err))
 })
 
 

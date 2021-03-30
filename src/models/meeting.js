@@ -31,13 +31,14 @@ meetingSchema.post('save', function () {
     //Delete all notifications
     notification.find({meetingID: this._id})
     .then(notifs => {
+        
         notifs.forEach(notif => {
             notification.findByIdAndDelete(notif._id)
             .then(console.log("deleted"))
         })
     })
     //Construct new notifications
-    console.log(this.daysOfWeek);
+    console.log(this._id);
     for (const [key, value] of Object.entries(this.daysOfWeek)) {
         if (value) {
             notif = new notification({
@@ -53,11 +54,12 @@ meetingSchema.post('save', function () {
     }
 })
 
-meetingSchema.pre('findOneAndDelete', function () {
+meetingSchema.post('findOneAndDelete', function () {
     //Delete all notifications
     console.log("Deleting notifications")
-    notification.find({meetingID: this._id})
+    notification.find({meetingID: this._conditions._id})
     .then(notifs => {
+        console.log(notifs);
         notifs.forEach(notif => {
             notification.findByIdAndDelete(notif._id)
             .then(console.log("deleted"))

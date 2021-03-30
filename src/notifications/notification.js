@@ -23,7 +23,11 @@ function handleNotifications() {
     notification.find()
     .then(notifs => { notifs.forEach(notification => validateNotifications(notification)) });
 }
-
+/**
+ * 
+ * @param {*} timeString A 24 hour time string to set to a datetime object.
+ * @returns A timestamp using the passed hours and minutes of timeString.
+ */
 function stringToTime(timeString) {
     let timestamp = new Date; // get an inital date
     let hour = timeString.substr(0,2) // get hour from meeting
@@ -43,14 +47,7 @@ function validateNotifications(notif) {
     const subtracted = moment(notifTime).subtract(parseInt(notif.offset), "minutes").toDate();
     const placeholder = new Date(Date.now());
     const day = placeholder.getDay()
-    if (notif.meetingDay == day){
-        console.log("-----------------");
-        console.log('%o and (%o or %o)', (today < subtracted), (notif.lastFired != null), (notif.lastFired < subtracted));
-        // https://www.howtocreate.co.uk/xor.html
-
-        console.log("today:      " + today.getTime());
-        console.log("subtracted: " + subtracted.getTime()); 
-        
+    if (notif.meetingDay == day){        
         if (today > subtracted){
             console.log("Within notification time")
             if ( (notif.lastFired == null) || (subtracted > notif.lastFired) ){
@@ -60,13 +57,9 @@ function validateNotifications(notif) {
                 console.log(notif.lastFired)
                 notif.save()
                 .then(() => console.log("Notified"));
-            } else {
-                console.log("Already Notified")
-            }
-        } else {
-            console.log("Out of Notification range.")
-        }
-    }
+            } else { console.log("Already Notified"); }
+        } else { console.log("Out of Notification time range."); }
+    } else { console.log("Out of Notification day range."); }
 }
 
 function getMailData(meetingID) {
@@ -88,7 +81,7 @@ function constructMail(m, u) {
         from: process.env.SMTP_EMAIL,
         to: u.email,
         subject: "Don't Forget",
-        text: 'You have ' + m.meetingName + ' today at, ' + m.startTime + '.'
+        text: 'You have ' + m.meetingName + ' today at, ' + m.startTime + '.' + '\n' + "Link: " + m.meetingLink 
     };
     sendEmail(mailOptions);
     return mailOptions
