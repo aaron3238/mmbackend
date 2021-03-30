@@ -1,8 +1,12 @@
 version: '3'
+volumes:
+  db:
 services:
   mongo:
     image: mongo
     restart: unless-stopped
+    volumes:
+      - db:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -18,5 +22,9 @@ services:
     build: .
     volumes:
       - ./src:/code/src
+      - ./package.json:/code/package.json
+    env_file: .env
     ports: 
       - 6969:6969
+      - 587:587
+    restart: unless-stopped
