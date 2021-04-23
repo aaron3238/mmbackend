@@ -20,9 +20,22 @@ router.route('/:id').get((req, res)=>{
 // find by username and pass
 router.route('/login').post((req, res)=>{
     console.log("email: " + req.body.email + " Password: " + req.body.password)
-    user.findOne({"email": req.body.email, "password": req.body.password})
-    .then(user => res.json(user._id))
-    .catch(err => res.status(400).json("No user found for: " + req.body.email + " " + err))
+    user.findOne({ email : req.body.email }, function(err, user) {
+        if (user === null) {
+            return res.status(400).send({
+                message : "User not found."
+            });
+        }
+        else {
+            if (user.validPassword(req.body.password)) {
+                return res.json(user._id)
+            }
+            else {
+                return res.status(400).json("No user found for: " + req.body.email + " " + err)
+            }
+        }
+    })
+    //.catch(err => res.status(400).json("No user found for: " + req.body.email + " " + err))
 })
 
 // edit user
@@ -31,7 +44,7 @@ router.route('/:id').post((req, res)=>{
     .then(updateUser => {
         updateUser.name = req.body.name,
         updateUser.email = req.body.email,
-        updateUser.password = req.body.password
+        updateUser.password = (user => user.setPassword(req.body.password))
 
         updateUser.save()
         .then(updatedUser => res.json(updatedUser))
@@ -50,8 +63,9 @@ router.route('/').post((req, res) => {
     const newUser = new user({
         name,
         email,
-        password,
+       
     })
+    newUser.setPassword(password)
 
     newUser.save()
     .then(newUser => res.json(newUser._id))
