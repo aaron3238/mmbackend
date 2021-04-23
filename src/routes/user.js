@@ -25,6 +25,18 @@ router.route('/login').post((req, res)=>{
     .catch(err => res.status(400).json("No user found for: " + req.body.email + " " + err))
 })
 
+router.route('/email').post((req, res)=>{
+    console.log("email: " + req.body.email + " Password: " + req.body.password)
+    user.findOne({"email": req.body.email})
+    .then(user => res.json(user._id))
+    .catch(user => res.json(user.email))
+})
+
+
+
+
+
+
 // edit user
 router.route('/:id').post((req, res)=>{
     user.findById(req.params.id)
