@@ -21,7 +21,8 @@ const auth = {
 function handleNotifications() {
     console.log("Checking notifications")
     notification.find()
-    .then(notifs => { notifs.forEach(notification => validateNotifications(notification)) });
+    .then(notifs => { notifs.forEach(notification => validateNotifications(notification))})
+    .catch(err => console.log(err))
 }
 /**
  * 
