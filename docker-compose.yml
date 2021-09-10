@@ -25,6 +25,6 @@ services:
       - ./package.json:/code/package.json
     env_file: .env
     ports: 
-      - 6969:6969
+      - 6868:6868
       - 587:587
     restart: unless-stopped
